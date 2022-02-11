@@ -8,6 +8,7 @@ import numpy as np
 
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
+import plotly.express as px
 
 
 df = pd.read_csv('data/data_sample.csv')
@@ -19,11 +20,11 @@ app = dash.Dash(external_stylesheets=[dbc.themes.FLATLY])
 # pie chart
 pie = df.groupby('target').count()['id'] / len(df)
 
-fig_pie = go.Figure(
-    data=[go.Pie(labels=list(pie.index),
-                 values=pie.values,
-                 hole=.3,
-                 marker=dict(colors=['#bad6eb', '#2b7bba']))])
+fig_pie = px.pie(pie.reset_index(),
+                 values='id',
+                 names='target',
+                 hole=0.3,
+                 color_discrete_sequence=['#bad6eb', '#2b7bba'])
 
 fig_pie.update_layout(
     width=320,
