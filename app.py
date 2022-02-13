@@ -6,8 +6,8 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 import numpy as np
 
-import plotly.figure_factory as ff
 import plotly.express as px
+import plotly.figure_factory as ff
 
 
 df = pd.read_csv('data/data_sample.csv')
