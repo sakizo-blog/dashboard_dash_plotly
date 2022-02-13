@@ -6,7 +6,6 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 import numpy as np
 
-import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import plotly.express as px
 
@@ -148,26 +147,24 @@ app.layout = dbc.Container(
               Input('my-button', 'n_clicks'),
               State('my-cat-picker', 'value'))
 def update_bar(n_clicks, cat_pick):
-    cat0 = df[df['target'] == 0].groupby(cat_pick).count()['id']
-    cat1 = df[df['target'] == 1].groupby(cat_pick).count()['id']
+    bar_df = df.groupby(['target', cat_pick]).count()['id'].reset_index()
+    bar_df['target'] = bar_df['target'].replace({0: 'target=0', 1: 'target=1'})
 
-    fig_bar = go.Figure(data=[
-        go.Bar(name='target=0',
-               x=list(cat0.index),
-               y=cat0.values,
-               marker=dict(color='#bad6eb')),
-        go.Bar(name='target=1',
-               x=list(cat1.index),
-               y=cat1.values,
-               marker=dict(color='#2b7bba'))])
+    fig_bar = px.bar(bar_df,
+                     x=cat_pick,
+                     y="id",
+                     color="target",
+                     color_discrete_sequence=['#bad6eb', '#2b7bba'])
 
     fig_bar.update_layout(
-        barmode='stack',
         width=500,
         height=340,
         margin=dict(l=40, r=20, t=20, b=30),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
+        legend_title=None,
+        yaxis_title=None,
+        xaxis_title=None,
         legend=dict(
             orientation="h",
             yanchor="bottom",
